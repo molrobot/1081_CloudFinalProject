@@ -1,0 +1,31 @@
+{% extends "frame.html" %}
+{% block content %}
+<h1>Launch EC2 Instance</h1>
+<form method="POST" name="post_form" action="{{url_for('ec2_launch')}}">
+    <table>
+        <tr>
+            <td>Number:</td>
+            <td><input type="text" name="number" value=""></td>
+        </tr>
+        <tr>
+            <td>Security Group:</td>
+            <td><input type="text" name="securitygroup" value=""></td>
+        </tr>
+        <tr>
+            <td>key:</td>
+            <td><input type="text" name="keyid" value=""></td>
+        </tr>
+        <tr>
+            <td>User Data:</td>
+            <td><textarea name="userdata"></textarea></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button type="submit">Submit</button>
+                <button type="reset">Clear</button>
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock %}

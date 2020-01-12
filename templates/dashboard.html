@@ -1,0 +1,15 @@
+{% extends "frame.html" %}
+{% block content %}
+<h1>Dashboard</h1>
+選擇EC2或S3<br>
+<table>
+    <tr>
+        <td>
+            <button onclick="window.location.href='{{ url_for('dashboard_ec2') }}';">EC2</button>
+        </td>
+        <td>
+            <button onclick="window.location.href='{{ url_for('dashboard_s3') }}';">S3</button>
+        </td>
+    </tr>
+</table>
+{% endblock %}

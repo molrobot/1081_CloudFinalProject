@@ -1,0 +1,11 @@
+#!/bin/bash
+sudo yum install -y python3
+cd /home/ec2-user
+wget http://yachentw.github.io/tmp/httpserv.py
+echo "cd /home/ec2-user" > /home/ec2-user/runserv.sh
+echo "python3 httpserv.py" >> /home/ec2-user/runserv.sh
+chmod u+x /home/ec2-user/runserv.sh
+sudo bash -c 'echo "/home/ec2-user/runserv.sh" >> /etc/rc.d/rc.local'
+sudo chmod u+x /etc/rc.d/rc.local
+python3 httpserv.py&
+
