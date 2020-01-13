@@ -53,6 +53,8 @@ def ec2_launch():
             )
             material = key_pair.key_material
             print(material)
+
+        
         image = str(request.form['image'])
         instance = 't2.micro'
         inst_num = int(request.form['number'])
@@ -122,4 +124,4 @@ def createSecurityGroup(gname, ports, ec2):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', debug=True)
