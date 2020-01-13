@@ -6,3 +6,6 @@ Jinja2
 MarkupSafe
 Werkzeug
 boto3
+Flask-SQLAlchemy
+psycopg2
+SQLAlchemy
