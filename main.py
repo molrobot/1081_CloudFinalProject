@@ -60,7 +60,7 @@ def ec2_launch():
         image = str(request.form['image'])
         instance = 't2.micro'
         inst_num = int(request.form['number'])
-        sg_id = createSecurityGroup(request.form['securitygroup'], [22,8080], ec2)
+        sg_id = createSecurityGroup(request.form['securitygroup'], [22,8080])
         userdata = str(request.form['userdata'])
 
         # create VMs with userdata
@@ -103,7 +103,7 @@ def service_s3(service):
         return render_template('')
     return render_template('s3_launch.html', pagetitle=service+' | S3')
 
-def createSecurityGroup(gname, ports, ec2):
+def createSecurityGroup(gname, ports):
     global ec2
     print("Create security group")
     try:
