@@ -20,6 +20,7 @@ def dashboard():
 
 @app.route('/ec2')
 def dashboard_ec2():
+    global ec2
     if ec2 == None:
         ec2 = boto3.resource('ec2')
     return render_template('ec2_dashboard.html', pagetitle='EC2 | Dashboard', response=ec2)
@@ -91,16 +92,19 @@ def ec2_launch():
 
 @app.route('/s3')
 def dashboard_s3():
+    global s3
     s3 = boto3.client('s3')
     return render_template('s3_dashboard.html', pagetitle='S3 | Dashboard')
 
 @app.route('/s3/launch')
 def service_s3(service):
+    global s3
     if request.method == 'POST':
         return render_template('')
     return render_template('s3_launch.html', pagetitle=service+' | S3')
 
 def createSecurityGroup(gname, ports, ec2):
+    global ec2
     print("Create security group")
     try:
         sg = ec2.create_security_group(
