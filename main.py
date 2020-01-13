@@ -45,14 +45,14 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    if session['username'] != None:
+    if session.get('username') != None:
         return render_template('dashboard.html', pagetitle='Dashboard')
     else:
         return redirect(url_for('login'))
 
 @app.route('/ec2')
 def dashboard_ec2():
-    if session['username'] != None:
+    if session.get('username') != None:
         return render_template('dashboard.html', pagetitle='Dashboard')
     else:
         return redirect(url_for('login'))
@@ -64,7 +64,7 @@ def dashboard_ec2():
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])
 def ec2_launch():
-    if session['username'] != None:
+    if session.get('username') != None:
         return render_template('dashboard.html', pagetitle='Dashboard')
     else:
         return redirect(url_for('login'))
