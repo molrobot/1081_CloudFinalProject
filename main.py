@@ -4,6 +4,9 @@ import random
 import string
 app = Flask(__name__)
 
+global ec2
+global s3
+
 @app.route('/')
 def login():
     return render_template('login.html', pagetitle='Login page')
@@ -17,44 +20,76 @@ def dashboard():
 
 @app.route('/ec2')
 def dashboard_ec2():
-    ec2 = boto3.client('ec2')
-    response = ec2.describe_instances()
-    print(response)
-    return render_template('ec2_dashboard.html', pagetitle='EC2 | Dashboard', content1=response)
+    if ec2 == None:
+        ec2 = boto3.resource('ec2')
+    return render_template('ec2_dashboard.html', pagetitle='EC2 | Dashboard', response=ec2)
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])
 def ec2_launch():
+    if ec2 == None:
+        ec2 = boto3.resource('ec2')
+
     if request.method == 'POST':
         # print(request.form['number'])
         # print(request.form['securitygroup'])
         # print(request.form['keyid'])
         # print(request.form['userdata'])
+        if ec2 == None:
+            ec2 = boto3.resource('ec2')
 
-        ec2 = boto3.resource('ec2')
+        # find the key
+        flag = True
         key = request.form['keyid']
-        INST_NUM = int(request.form['number'])
+        for k in list(ec2.key_pairs.all()):
+            if k.name == key:
+                flag = False
+                break
+        
+        material = ""
+        if flag:
+            key_pair = ec2.create_key_pair(
+                KeyName=key,
+                DryRun=False
+            )
+            material = key_pair.key_material
+            print(material)
+        image = str(request.form['image'])
+        instance = 't2.micro'
+        inst_num = int(request.form['number'])
         sg_id = createSecurityGroup(request.form['securitygroup'], [22,8080], ec2)
         userdata = str(request.form['userdata'])
 
+        # create VMs with userdata
         print("Create instances")
         instances = ec2.create_instances(
-            ImageId='ami-062f7200baf2fa504',
-            InstanceType='t2.medium',
+            ImageId=image,
+            InstanceType=instance,
             KeyName=key,
-            MinCount=INST_NUM,
-            MaxCount=INST_NUM,
+            MinCount=inst_num,
+            MaxCount=inst_num,
             SecurityGroupIds=[sg_id],
             UserData=userdata
         )
         inst_ids = [ inst.instance_id for inst in instances]
         print("Launch complete.")
-        return render_template('launch_complete.html', instance=instances, id=inst_ids)
-    return render_template('ec2_launch.html', pagetitle='Launch Instance | EC2')
+        return render_template('ec2_launch_complete.html', pagetitle='Launch Instance | EC2',
+            instance=instances, material=material)
+
+    # 取得映像id (unfinished)
+    images = ec2.images.all()
+    # 取得所有security group
+    securitygroups = list(ec2.security_groups.all())
+    print(securitygroups)
+    # 取得所有key_pair
+    keys = list(ec2.key_pairs.all())
+    print(keys)
+    return render_template('ec2_launch.html', pagetitle='Launch Instance | EC2',
+        image=images, securitygroup=securitygroups, key=keys)
 
 @app.route('/s3')
 def dashboard_s3():
     s3 = boto3.client('s3')
-    return render_template('s3_dashboard.html', pagetitle='S3 | Dashboard', content1=s3)
+    return render_template('s3_dashboard.html', pagetitle='S3 | Dashboard')
 
 @app.route('/s3/launch')
 def service_s3(service):

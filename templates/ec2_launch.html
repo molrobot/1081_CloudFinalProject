@@ -8,12 +8,45 @@
             <td><input type="text" name="number" value=""></td>
         </tr>
         <tr>
+            <td>Image:</td>
+            <td>
+                <input type="radio" name="image" value="ami-062f7200baf2fa504"> Amazon Linux 2 AMI<br>
+                <input type="radio" name="image" value="ami-02b212aba9eb84405"> Windows Server 2019<br>
+            </td>
+        </tr>
+        <tr>
+            <td>Image List:</td>
+            <td>
+                {{ image }}
+            </td>
+        </tr>
+        <tr>
             <td>Security Group:</td>
             <td><input type="text" name="securitygroup" value=""></td>
         </tr>
         <tr>
+            <td>Security Group List:</td>
+            <td>
+                <ul>
+                    {% for s in securitygroup %}
+                    <li>{{ s.id }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        <tr>
             <td>key:</td>
             <td><input type="text" name="keyid" value=""></td>
+        </tr>
+        <tr>
+            <td>Key Pair List:</td>
+            <td>
+                <ul>
+                    {% for s in key %}
+                    <li>{{ s.name }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
         </tr>
         <tr>
             <td>User Data:</td>

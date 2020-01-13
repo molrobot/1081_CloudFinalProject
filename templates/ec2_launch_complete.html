@@ -1,0 +1,13 @@
+{% extends "frame.html" %}
+{% block content %}
+<h1>Launch EC2 Complete</h1>
+<div>
+    {{ instance }}
+    <br>
+    {% if material %}
+        {{ material }}
+        <br>
+    {% endif %}
+    <button onclick="window.location.href='{{ url_for('dashboard_ec2') }}';">EC2 Dashboard</button>
+</div>
+{% endblock %}

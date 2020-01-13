@@ -1,5 +1,20 @@
 {% extends "frame.html" %}
 {% block content %}
 <h1>Login Page</h1>
-
+<form method="POST" name="post_form" action="{{url_for('login')}}">
+    <table>
+        <tr>
+            <td>aws_access_key_id</td>
+            <td><input type="text" name="id" value=""></td>
+        </tr>
+        <tr>
+            <td>aws_secret_access_key</td>
+            <td><input type="text" name="secret" value=""></td>
+        </tr>
+        <tr>
+            <td>aws_session_token</td>
+            <td><input type="text" name="session" value=""></td>
+        </tr>
+    </table>
+</form>
 {% endblock %}
