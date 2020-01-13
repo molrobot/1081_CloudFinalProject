@@ -4,8 +4,8 @@ import random
 import string
 app = Flask(__name__)
 
-global ec2
-global s3
+ec2 = None
+s3 = None
 
 @app.route('/')
 def login():
@@ -26,6 +26,7 @@ def dashboard_ec2():
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])
 def ec2_launch():
+    global ec2
     if ec2 == None:
         ec2 = boto3.resource('ec2')
 
