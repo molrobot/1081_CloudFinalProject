@@ -26,10 +26,10 @@ class Visitor(db.Model):
 @app.route('/show')
 def show():
     visitors = Visitor.query.all()
+    out = ""
     for v in visitors:
-        return str(v.id) + ' ' + v.name + ' ' + v.password + '<br>'
-    
-    return "AAA"
+        out += str(v.id) + ' ' + v.name + ' ' + v.password + '<br>'
+    return out
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
