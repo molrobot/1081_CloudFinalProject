@@ -10,6 +10,7 @@ db = SQLAlchemy(app)
 ec2 = None
 s3 = None
 
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 class Visitor(db.Model):
     __tablename__ = "visitor"
     id = db.Column(db.Integer, primary_key=True)
