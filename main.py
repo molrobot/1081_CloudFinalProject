@@ -1,14 +1,46 @@
 from flask import Flask, session, abort, flash, request, redirect, url_for, render_template
+from flask_sqlalchemy import SQLAlchemy
+import os
 import boto3
 import random
 import string
 app = Flask(__name__)
-
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+db = SQLAlchemy(app)
 ec2 = None
 s3 = None
 
+class Visitor(db.Model):
+    __tablename__ = "visitor"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(80), unique=True, nullable=False)
+    def __init__(self, k, v):
+        self.name = k
+        self.val = v
+    def __repr__(self):
+        return '<Visitor %r>' % self.key
+
+@app.route('/show')
+def show():
+    visitors = Visitor.query.all()
+    for v in visitors:
+        print(str(v.id) + ' ' + v.name + ' ' + v.password)
+
 @app.route('/')
 def login():
+    if request.method == 'POST':
+        name = request.form['name']
+        pw = request.form['password']
+        visitors = Visitor.query.all()
+        for v in visitors:
+            if v.name == name and v.password == pw:
+                session['username'] = name
+                return render_template('dashboard.html', pagetitle='Dashboard')
+        db.session.add(Visitor(name, pw))
+        db.session.commit()
+        session['username'] = name
+        return render_template('dashboard.html', pagetitle='Dashboard')
     return render_template('login.html', pagetitle='Login page')
 
 @app.route('/dashboard')
