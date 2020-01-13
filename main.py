@@ -17,7 +17,7 @@ class Visitor(db.Model):
     password = db.Column(db.String(80), unique=True, nullable=False)
     def __init__(self, k, v):
         self.name = k
-        self.val = v
+        self.password = v
     def __repr__(self):
         return '<Visitor %r>' % self.key
 
