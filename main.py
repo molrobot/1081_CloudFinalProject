@@ -27,7 +27,7 @@ def show():
     for v in visitors:
         print(str(v.id) + ' ' + v.name + ' ' + v.password)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         name = request.form['name']
@@ -45,13 +45,18 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    if True:
+    if session['username'] != None:
         return render_template('dashboard.html', pagetitle='Dashboard')
     else:
         return redirect(url_for('login'))
 
 @app.route('/ec2')
 def dashboard_ec2():
+    if session['username'] != None:
+        return render_template('dashboard.html', pagetitle='Dashboard')
+    else:
+        return redirect(url_for('login'))
+
     global ec2
     if ec2 == None:
         ec2 = boto3.resource('ec2')
@@ -59,6 +64,11 @@ def dashboard_ec2():
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])
 def ec2_launch():
+    if session['username'] != None:
+        return render_template('dashboard.html', pagetitle='Dashboard')
+    else:
+        return redirect(url_for('login'))
+
     global ec2
     if ec2 == None:
         ec2 = boto3.resource('ec2')
