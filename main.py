@@ -11,6 +11,7 @@ ec2 = None
 s3 = None
 
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
 class Visitor(db.Model):
     __tablename__ = "visitor"
     id = db.Column(db.Integer, primary_key=True)
@@ -46,16 +47,12 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    if session.get('username') != None:
-        return render_template('dashboard.html', pagetitle='Dashboard')
-    else:
+    if session.get('username') == None:
         return redirect(url_for('login'))
 
 @app.route('/ec2')
 def dashboard_ec2():
-    if session.get('username') != None:
-        return render_template('dashboard.html', pagetitle='Dashboard')
-    else:
+    if session.get('username') == None:
         return redirect(url_for('login'))
 
     global ec2
@@ -65,9 +62,7 @@ def dashboard_ec2():
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])
 def ec2_launch():
-    if session.get('username') != None:
-        return render_template('dashboard.html', pagetitle='Dashboard')
-    else:
+    if session.get('username') == None:
         return redirect(url_for('login'))
 
     global ec2
