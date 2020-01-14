@@ -53,7 +53,9 @@ def login():
     if request.method == 'POST':
         name = request.form['name']
         pw = request.form['password']
+        print(name, pw)
         visitors = Visitor.query.all()
+        print(visitors)
         for v in visitors:
             if v.name == name and v.password == pw:
                 print(name)
