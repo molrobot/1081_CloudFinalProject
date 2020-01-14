@@ -2,50 +2,48 @@
 {% block content %}
 <h1>S3</h1>
 <div class="content">
+				<h3>S3 Flask Demo</h3>
+				<h2> {{ msg }}</h2>
 
-        <h3>S3 Flask Demo</h3>
-    
-    
-        <h2> {{ msg }}</h2>
-    
-        <div>
-          <h3>Create Bucket here:</h3>
-          <form method="POST" action='/s3/create' enctype=multipart/form-data>  
-            <input name = "name" type = "text" size = "25">
-            <input type=submit value=Create>
-          </form>
-        </div>
+				<div>
+					<h3>Create Bucket here:</h3>
+					<form method="POST" action='/s3/create' enctype=multipart/form-data>
+						<input name = "name" type = "text" size = "25">
+						<input type=submit value=Create>
+					</form>
+				</div>
 
-        <div>
-          <h3>Delete Bucket here:</h3>
-          <form method="POST" action='/s3/delete' enctype=multipart/form-data>  
-            <input name = "delname" type = "text" size = "25">
-            <input type=submit value=Delete>
-          </form>
-        </div>
+				<div>
+					<h3>Delete Bucket here:</h3>
+					<form method="POST" action='/s3/delete' enctype=multipart/form-data>
+						<input name = "delname" type = "text" size = "25">
+						<input type=submit value=Delete>
+					</form>
+				</div>
 
-        <div>
-          <h3>Upload your file here:</h3>
-          <form method="POST" action="/s3/upload" enctype=multipart/form-data>
-            <input type=file name=file>
-            <input type=submit value=Upload>
-          </form>
-        </div>
-    
-    
-        <div>
-          <h3>These are your uploaded files:</h3>
-          <p>Click on the filename to download it.</p>
-          <p>current_bucket : {{ current_bucket }}</p>
-          <ul>
-            {% for item in contents %}
-              <li>
-                <a href="/download/{{ item.Key }}"> {{ item.Key }} </a>
-              </li>
-            {% endfor %}
-          </ul>
-    
-        </div>
+				<div>
+					<h3>Upload your file here:</h3>
+					<form method="POST" action="/s3/upload" enctype=multipart/form-data>
+						<input type=file name=file>
+						<input type=submit value=Upload>
+					</form>
+				</div>
 
-    </div>
+				<div>
+					<h3>These are your uploaded files:</h3>
+					<p>Click on the filename to download it.</p>
+					{% for bucket, item in contents.iteritems() %}
+					<p>current_bucket : {{ bucket }}</p>
+					<ul>
+						{% for o in item %}
+							<li>
+							<a href="/download/{{ o.Key }}"> {{ o.Key }} </a>
+							</li>
+						{% endfor %}
+					</ul>
+					{% endfor %}
+
+				</div>
+
+		</div>
 {% endblock %}
