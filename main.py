@@ -313,20 +313,17 @@ def download(bucket, key):
 
     print(key, bucket)
     try:
-        # s3_client.download_file(bucket, key, key)
-        file = s3_client.get_object(Bucket=bucket, Key=key)
+        s3_client.download_file(bucket, key, key)
+        # file = s3_client.get_object(Bucket=bucket, Key=key)
     except ClientError as e:
         print(e)
         return redirect('/s3')
-        # s3 = boto3.resource('s3')
-        # output = f"downloads/{filename}"
-        # s3.Bucket(bucket).download_file(file_name, output)
-    # return send_file(key, as_attachment=True)
-    return Response(
-        file['Body'].read(),
-        mimetype='text/plain',
-        headers={"Content-Disposition": "attachment;filename=" + key}
-    )
+    return send_file(key, as_attachment=True)
+    # return Response(
+    #     file['Body'].read(),
+    #     mimetype='text/plain',
+    #     headers={"Content-Disposition": "attachment;filename=" + key}
+    # )
 
 def createSecurityGroup(gname, ports):
     global ec2
