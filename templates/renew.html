@@ -3,24 +3,27 @@
 <h1>EC2</h1>
 <div>
     <table>
-        <tr>
-            <td>aws_access_key_id:</td>
-            <td>
-                <input name='id'>
-            </td>
-        </tr>
-        <tr>
-            <td>aws_secret_access_key:</td>
-            <td>
-                <input name='key'>
-            </td>
-        </tr>
-        <tr>
-            <td>aws_session_token:</td>
-            <td>
-                <input name='session'>
-            </td>
-        </tr>
+        <form method="POST"  name="post_form" action="{{ url_for('renew') }}">
+            <tr>
+                    <td>aws_access_key_id:</td>
+                    <td>
+                        <input name='id'>
+                    </td>
+                </tr>
+                <tr>
+                    <td>aws_secret_access_key:</td>
+                    <td>
+                        <input name='key'>
+                    </td>
+                </tr>
+                <tr>
+                    <td>aws_session_token:</td>
+                    <td>
+                        <input name='session'>
+                    </td>
+                </tr>
+    </form>
+
     </table>
 </div>
 {% endblock %}
