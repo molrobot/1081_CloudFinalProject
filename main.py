@@ -64,6 +64,7 @@ def dashboard_ec2():
     if request.method == 'POST':
             response = client.describe_instances()
             for reservation in response['Reservations']:
+                print(reservation['Instances'])
                 for instance in reservation['Instances']:
                     if instance['Tags'][0]['Value'] == session.get('username'):
                         if request.form['action'] == 'terminate':
@@ -79,6 +80,7 @@ def dashboard_ec2():
     instances = []
     response = client.describe_instances()
     for reservation in response['Reservations']:
+        print(reservation['Instances'])
         for instance in reservation['Instances']:
             if instance['Tags'][0]['Value'] == session.get('username'):
                 instances.append(instance)
