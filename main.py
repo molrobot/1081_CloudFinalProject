@@ -53,19 +53,14 @@ def login():
     if request.method == 'POST':
         name = request.form['name']
         pw = request.form['password']
-        print(name, pw)
         visitors = Visitor.query.all()
-        print(visitors)
         for v in visitors:
             if v.name == name and v.password == pw:
-                print(name)
                 session['username'] = name
-            print(session.get('username'), "XXX")
-            return redirect('/dashboard')
+                return redirect('/dashboard')
         db.session.add(Visitor(name, pw))
         db.session.commit()
         session['username'] = name
-        print(session.get('username'))
         return redirect('/dashboard')
     return render_template('login.html', pagetitle='Login page')
 
@@ -73,7 +68,7 @@ def login():
 def dashboard():
     if session.get('username') == None:
         return redirect('/')
-    
+
     return render_template('dashboard.html', pagetitle='Login page' + session.get('username'))
 
 @app.route('/ec2', methods=['GET', 'POST'])
