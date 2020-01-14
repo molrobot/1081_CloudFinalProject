@@ -26,7 +26,7 @@
 				<div>
 					{% for bucket, item in buckets.items() %}
 					<div>
-						<h3>{{ bucket }}</h3>
+						<h2>{{ bucket }}</h2>
 						<h4>Upload your file:</h4>
 						<form method="POST" action="/s3/upload" enctype=multipart/form-data>
 							<input type="file" name="file">
@@ -37,7 +37,7 @@
 					<ul>
 						{% for o in item %}
 							<li>
-							<a href="/download/{{ o.Key }}"> {{ o.Key }} </a>
+							<a href="/s3/download?b={{ bucket }}&k={{ o.Key }}"> {{ o.Key }} </a>
 							</li>
 						{% endfor %}
 					</ul>

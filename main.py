@@ -262,13 +262,8 @@ def s3_delete():
             for i in contents:
                 obj_key.append(i['Key'])
             print (obj_key)
-            delete_objects(del_bucket_name,obj_key)
-                # print (i['Key'])
-                # client = boto3.client('s3')
-                # response=client.delete_object(del_bucket_name,i['Key'])
-            # if contents != []:
-                # client = boto3.client('s3')
-                # response=client.delete_objects(del_bucket_name,contents)
+            if obj_key!=[]:
+                delete_objects(del_bucket_name,obj_key)
         response = s3_client.delete_bucket(
             Bucket=del_bucket_name
         )
@@ -307,31 +302,22 @@ def upload():
             return redirect('/s3')
     return redirect('/s3')
 
-    # if request.method == "POST":
-    #     f = request.files['file']
-    #     f.save(f.filename)
-    #     upload_file(f"{f.filename}", BUCKET)
-
-    #     return redirect("/storage")
-
-def upload_file(file_name, bucket):
-    """
-    Function to upload a file to an S3 bucket
-    """
-    object_name = file_name
-    s3_client = boto3.client('s3')
-    response = s3_client.upload_file(file_name, bucket, object_name)
-
-    return response
-
 @app.route("/s3/download", methods=['GET', 'POST'])
 def download(filename):
-    if request.method == 'GET':
-        s3 = boto3.resource('s3')
-        output = f"downloads/{filename}"
-        s3.Bucket(bucket).download_file(file_name, output)
+    global s3_client
+    if s3_client == None:
+        s3_client = boto3.client('s3')
 
-        return send_file(output, as_attachment=True)
+    if request.method == 'GET':
+        key = request.args.get('k')
+        bucket = request.args.get('b')
+        print(key, bucket)
+
+        return redirect('/s3')
+        # s3 = boto3.resource('s3')
+        # output = f"downloads/{filename}"
+        # s3.Bucket(bucket).download_file(file_name, output)
+        # return send_file(output, as_attachment=True)
 
 def createSecurityGroup(gname, ports):
     global ec2
