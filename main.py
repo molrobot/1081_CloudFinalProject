@@ -313,14 +313,14 @@ def download(bucket, key):
 
     print(key, bucket)
     try:
-        s3_client.download_fileobj(bucket, key, f)
+        s3_client.download_file(bucket, key, key)
     except ClientError as e:
         print(e)
         return redirect('/s3')
         # s3 = boto3.resource('s3')
         # output = f"downloads/{filename}"
         # s3.Bucket(bucket).download_file(file_name, output)
-    return send_file(f, as_attachment=True)
+    return send_file(key, as_attachment=True)
 
 def createSecurityGroup(gname, ports):
     global ec2
