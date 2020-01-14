@@ -86,8 +86,7 @@ def dashboard_ec2():
                 instances.append(instance)
 
     print(instances)      
-    return render_template('ec2_dashboard.html',
-        pagetitle='EC2 | Dashboard' + ' ' + session.get('username'), instance=instances)
+    return render_template('ec2_dashboard.html', pagetitle='EC2 | Dashboard' + ' ' + session.get('username'), instance=instances)
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])
 def ec2_launch():
