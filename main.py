@@ -75,19 +75,15 @@ def dashboard_ec2():
                                 InstanceIds=[instance['InstanceId']]
                             )
     
+    time.sleep(2)
     instances = []
     response = client.describe_instances()
     for reservation in response['Reservations']:
         for instance in reservation['Instances']:
             if instance['Tags'][0]['Value'] == session.get('username'):
                 instances.append(instance)
-
-            # if instance['Tags'][0]['Key'] == 'Name' and instance['Tags'][0]['Value'] == session.get('username'):
-            #     instances.append("Instance: " + instance['InstanceId'] + "Public DNS: " + instance["PublicDnsName"])
-            #     for securityGroup in instance['SecurityGroups']:
-            #         instances.append("SecurityGroup ID: {}, Name: {}".format(securityGroup['GroupId'], securityGroup['GroupName']))
-
-    return render_template('ec2_dashboard.html',
+                
+    return render_template('ec2_dashboard.html', \
         pagetitle='EC2 | Dashboard' + ' ' + session.get('username'), instance=instances)
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])
