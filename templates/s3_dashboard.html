@@ -20,19 +20,20 @@
 						<input type="submit" value="Delete">
 					</form>
 				</div>
+				<h5>These are your uploaded files:</h5>
+				<h5>Click on the filename to download it.</h5>
 
 				<div>
 					{% for bucket, item in buckets.items() %}
 					<div>
-						<h3>Upload your file to {{ bucket }}:</h3>
+						<h3>{{ bucket }}</h3>
+						<h4>Upload your file:</h4>
 						<form method="POST" action="/s3/upload" enctype=multipart/form-data>
 							<input type="file" name="file">
 							<input type="hidden" name="bucket" value="{{ bucket }}">
 							<input type="submit" value="Upload">
 						</form>
 					</div>
-					<h4>These are your uploaded files:</h4>
-					<p>Click on the filename to download it.</p>
 					<ul>
 						{% for o in item %}
 							<li>
@@ -41,8 +42,6 @@
 						{% endfor %}
 					</ul>
 					{% endfor %}
-
 				</div>
-
 		</div>
 {% endblock %}
