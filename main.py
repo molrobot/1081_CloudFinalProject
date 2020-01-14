@@ -302,8 +302,8 @@ def upload():
             return redirect('/s3')
     return redirect('/s3')
 
-@app.route("/s3/download", methods=['GET', 'POST'])
-def download():
+@app.route("/s3/download/<bucket>/<key>", methods=['GET', 'POST'])
+def download(bucket, key):
     global s3_client
     if s3_client == None:
         s3_client = boto3.client('s3')
@@ -312,8 +312,12 @@ def download():
         key = request.args.get('k')
         bucket = request.args.get('b')
         print(key, bucket)
-
-        return redirect('/s3')
+        try:
+            s3_client.download_file(bucket, key, key)
+        except ClientError as e:
+            print(e)
+            return redirect('/s3')
+    return redirect('/s3')
         # s3 = boto3.resource('s3')
         # output = f"downloads/{filename}"
         # s3.Bucket(bucket).download_file(file_name, output)
@@ -322,7 +326,6 @@ def download():
 def createSecurityGroup(gname, ports):
     global ec2
     print("Create security group")
-    try:
         sg = ec2.create_security_group(
             Description='boto3 allow ' + ' '.join(str(n) for n in ports),
             GroupName=gname,

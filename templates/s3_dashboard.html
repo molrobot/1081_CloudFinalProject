@@ -37,7 +37,7 @@
 					<ul>
 						{% for o in item %}
 							<li>
-							<a href="/s3/download?b={{ bucket }}&k={{ o.Key }}"> {{ o.Key }} </a>
+							<a href="/s3/download/{{ bucket }}/{{ o.Key }}"> {{ o.Key }} </a>
 							</li>
 						{% endfor %}
 					</ul>
