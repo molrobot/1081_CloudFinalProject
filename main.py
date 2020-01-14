@@ -77,7 +77,7 @@ def ec2_dashboard():
         return redirect('/')
 
     global ec2_client
-    if ec2_client == None
+    if ec2_client == None:
         ec2_client = boto3.client('ec2')
     if request.method == 'POST':
             response = ec2_client.describe_instances()
@@ -201,7 +201,7 @@ def s3_dashboard():
         return redirect('/')
 
     global s3_client
-    if s3_client == None
+    if s3_client == None:
         s3_client = boto3.client('s3')
 
     buckets = dict()
@@ -216,7 +216,7 @@ def list_files(bucket):
     contents = []
     try:
         global s3_client
-        if s3_client == None
+        if s3_client == None:
             s3_client = boto3.client('s3')
         for item in s3_client.list_objects(Bucket=bucket)['Contents']:
             print(item)
@@ -231,7 +231,7 @@ def s3_create():
         return redirect('/')
 
     global s3_client
-    if s3_client == None
+    if s3_client == None:
         s3_client = boto3.client('s3')
 
     if request.method == "POST":
@@ -251,7 +251,7 @@ def s3_delete():
         return redirect('/')
 
     global s3_client
-    if s3_client == None
+    if s3_client == None:
         s3_client = boto3.client('s3')
 
     if(request.method=="POST"):
@@ -286,7 +286,7 @@ def delete_objects(bucket_name, object_names):
     objlist = [{'Key': obj} for obj in object_names]
 
     global s3_client
-    if s3_client == None
+    if s3_client == None::
         s3_client = boto3.client('s3')
     # Delete the objects
     try:
@@ -304,7 +304,7 @@ def upload():
         object_name = file_name
 
     global s3_client
-    if s3_client == None
+    if s3_client == None::
         s3_client = boto3.client('s3')
     # Upload the file
     try:
