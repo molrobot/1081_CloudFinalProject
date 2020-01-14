@@ -51,6 +51,8 @@ def login():
 def dashboard():
     if session.get('username') == None:
         return redirect(url_for('login'))
+    
+    return render_template('dashboard.html', pagetitle='Login page' + session.get('username'))
 
 @app.route('/ec2')
 def dashboard_ec2():
@@ -70,7 +72,8 @@ def dashboard_ec2():
             for securityGroup in instance['SecurityGroups']:
                 print("SG ID: {}, Name: {}".format(securityGroup['GroupId'], securityGroup['GroupName']))
 
-    return render_template('ec2_dashboard.html', pagetitle='EC2 | Dashboard', response=ec2)
+    return render_template('ec2_dashboard.html',
+        pagetitle='EC2 | Dashboard' + session.get('username'), response=ec2)
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])
 def ec2_launch():
@@ -116,7 +119,7 @@ def ec2_launch():
                         'Value': tag
                     },
                 ]
-            }
+            },
         ]
 
         image = str(request.form['image'])
@@ -135,12 +138,12 @@ def ec2_launch():
             MaxCount=inst_num,
             SecurityGroupIds=[sg_id],
             UserData=userdata,
-            TagSpecifications=tags
+            TagSpecifications=tags,
         )
         inst_ids = [ inst.instance_id for inst in instances]
         print("Launch complete.")
-        return render_template('ec2_launch_complete.html', pagetitle='Launch Instance | EC2',
-            instance=instances, material=material)
+        return render_template('ec2_launch_complete.html', pagetitle='Launch Complete | EC2' + \
+            session.get('username'), instance=instances, material=material)
 
     # 取得映像id (unfinished)
     images = ec2.images.all()
@@ -150,7 +153,7 @@ def ec2_launch():
     # 取得所有key_pair
     keys = list(ec2.key_pairs.all())
     print(keys)
-    return render_template('ec2_launch.html', pagetitle='Launch Instance | EC2',
+    return render_template('ec2_launch.html', pagetitle='Launch Instance | EC2' + session.get('username'),
         image=images, securitygroup=securitygroups, key=keys)
 
 @app.route('/s3')
