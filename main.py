@@ -315,8 +315,6 @@ def download(bucket, key):
         s3_client = boto3.client('s3')
 
     if request.method == 'GET':
-        key = request.args.get('k')
-        bucket = request.args.get('b')
         print(key, bucket)
         try:
             s3_client.download_file(bucket, key, key)
