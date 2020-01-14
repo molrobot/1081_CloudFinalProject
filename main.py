@@ -287,6 +287,9 @@ def delete_objects(bucket_name, object_names):
 
 @app.route("/s3/upload", methods=['GET', 'POST'])
 def upload():
+    if session.get('username') == None:
+        return redirect('/')
+
     global s3_client
     if s3_client == None:
         s3_client = boto3.client('s3')
@@ -304,6 +307,9 @@ def upload():
 
 @app.route("/s3/download/<bucket>/<key>", methods=['GET', 'POST'])
 def download(bucket, key):
+    if session.get('username') == None:
+        return redirect('/')
+        
     global s3_client
     if s3_client == None:
         s3_client = boto3.client('s3')
@@ -316,7 +322,6 @@ def download(bucket, key):
             s3_client.download_file(bucket, key, key)
         except ClientError as e:
             print(e)
-            return redirect('/s3')
     return redirect('/s3')
         # s3 = boto3.resource('s3')
         # output = f"downloads/{filename}"
@@ -326,6 +331,7 @@ def download(bucket, key):
 def createSecurityGroup(gname, ports):
     global ec2
     print("Create security group")
+    try:
         sg = ec2.create_security_group(
             Description='boto3 allow ' + ' '.join(str(n) for n in ports),
             GroupName=gname,
