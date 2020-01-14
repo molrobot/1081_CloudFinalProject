@@ -207,6 +207,8 @@ def s3_dashboard():
 # Function to list files in a given S3 bucket
 def list_files(bucket):
     contents = []
+    o = client.list_objects(Bucket=bucket)
+    print(o)
     try:
         for item in client.list_objects(Bucket=bucket)['Contents']:
             print(item)
