@@ -75,8 +75,16 @@ def dashboard_ec2():
                             client.start_instances(
                                 InstanceIds=[instance['InstanceId']]
                             )
+                        elif request.form['action'] == 'stop':
+                            client.stop_instances(
+                                InstanceIds=[instance['InstanceId']]
+                            )
+                        elif request.form['action'] == 'reboot':
+                            client.reboot_instances(
+                                InstanceIds=[instance['InstanceId']]
+                            )
     
-    time.sleep(2)
+    time.sleep(3)
     instances = []
     response = client.describe_instances()
     for reservation in response['Reservations']:
@@ -86,7 +94,8 @@ def dashboard_ec2():
                 instances.append(instance)
 
     print(instances)      
-    return render_template('ec2_dashboard.html', pagetitle='EC2 | Dashboard' + ' ' + session.get('username'), instance=instances)
+    return render_template('ec2_dashboard.html', pagetitle='EC2 | Dashboard' + \ 
+        ' ' + session.get('username'), instance=instances)
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])
 def ec2_launch():
@@ -156,7 +165,7 @@ def ec2_launch():
         # inst_ids = [ inst.instance_id for inst in instances]
         print("Launch complete.")
         return render_template('ec2_launch_complete.html', pagetitle='Launch Complete | EC2' + \
-            session.get('username'), instance=instances, material=material)
+            ' ' + session.get('username'), instance=instances, material=material)
 
     # 取得映像id (unfinished)
     images = ec2.images.all()
@@ -166,8 +175,8 @@ def ec2_launch():
     # 取得所有key_pair
     keys = list(ec2.key_pairs.all())
     print(keys)
-    return render_template('ec2_launch.html', pagetitle='Launch Instance | EC2' + session.get('username'),
-        image=images, securitygroup=securitygroups, key=keys)
+    return render_template('ec2_launch.html', pagetitle='Launch Instance | EC2' + \
+        ' ' + session.get('username'), image=images, securitygroup=securitygroups, key=keys)
 
 @app.route('/s3')
 def dashboard_s3():

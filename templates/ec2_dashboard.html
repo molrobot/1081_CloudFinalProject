@@ -5,6 +5,8 @@
     <button onclick="window.location.href='{{ url_for('ec2_launch') }}';">Launch Instance</button>       
     <form method="POST" name="post_form" action="{{ url_for('dashboard_ec2') }}">
         <button name='action' value='start'>Start All</button>
+        <button name='action' value='stop'>Stop All</button>
+        <button name='action' value='reboot'>Reboot All</button>
         <button name='action' value='terminate'>Terminate All</button>
     </form>
 </div>
@@ -21,10 +23,18 @@
         {% for s in instance %}
         <tr>
             <td> {{ loop.index }} </td>
-            <td> {{ s['Tags'][0]['Value']  }} </td>
+            <td>
+                {% for t in s['Tags'] %}
+                    {{ t['Value'] }}<br>
+                {% endfor %}
+            </td>
             <td> {{ s['State']['Name'] }} </td>
             <td> {{ s['PublicDnsName'] }} </td>
-            <td> {{ s['SecurityGroups'][0]['GroupName'] }} </td>
+            <td>
+                {% for t in s['SecurityGroups'] %}
+                    {{ t['GroupName'] }}<br>
+                {% endfor %}
+            </td>
             <td> {{ s['KeyName'] }} </td>
         </tr>
         {% endfor %}
