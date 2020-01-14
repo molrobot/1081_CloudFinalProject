@@ -201,7 +201,7 @@ def s3_dashboard():
     response = client.list_buckets()
     for bucket in response['Buckets']:
         buckets[bucket['Name']] = list_files(bucket['Name'])
-
+    print(buckets)
     return render_template('s3_dashboard.html', buckets=buckets)
 
 # Function to list files in a given S3 bucket
