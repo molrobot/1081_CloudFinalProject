@@ -25,7 +25,7 @@ class Visitor(db.Model):
         self.name = k
         self.password = v
     def __repr__(self):
-        return '<Visitor %r>' % self.key
+        return '<Visitor %r>' % self.id
 
 @app.route('/show')
 def show():
