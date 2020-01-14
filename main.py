@@ -195,15 +195,20 @@ def s3_dashboard():
     if session.get('username') == None:
         return redirect(url_for('login'))
 
-    if BUCKET != "":
-        contents = list_files(BUCKET)
-    else :
-        contents=[]
+    client = boto3.client('s3')
+    response = s3.list_buckets()
+    for bucket in response['Buckets']:
+        print(bucket["Name"])
+        
+    contents=[]
     return render_template('storage.html', contents=contents)
 
 # Function to list files in a given S3 bucket
 def list_files(bucket):
-    client = boto3.client('s3')
+
+    # Output the bucket names
+    print('Existing buckets:')
+    
     contents = []
     try:
         for item in client.list_objects(Bucket=bucket)['Contents']:
