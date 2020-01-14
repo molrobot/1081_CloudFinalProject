@@ -94,7 +94,7 @@ def dashboard_ec2():
                 instances.append(instance)
 
     print(instances)      
-    return render_template('ec2_dashboard.html', pagetitle='EC2 | Dashboard' + \ 
+    return render_template('ec2_dashboard.html', pagetitle='EC2 | Dashboard' +
         ' ' + session.get('username'), instance=instances)
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])
@@ -164,7 +164,7 @@ def ec2_launch():
         )
         # inst_ids = [ inst.instance_id for inst in instances]
         print("Launch complete.")
-        return render_template('ec2_launch_complete.html', pagetitle='Launch Complete | EC2' + \
+        return render_template('ec2_launch_complete.html', pagetitle='Launch Complete | EC2' +
             ' ' + session.get('username'), instance=instances, material=material)
 
     # 取得映像id (unfinished)
@@ -175,7 +175,7 @@ def ec2_launch():
     # 取得所有key_pair
     keys = list(ec2.key_pairs.all())
     print(keys)
-    return render_template('ec2_launch.html', pagetitle='Launch Instance | EC2' + \
+    return render_template('ec2_launch.html', pagetitle='Launch Instance | EC2' +
         ' ' + session.get('username'), image=images, securitygroup=securitygroups, key=keys)
 
 @app.route('/s3')
