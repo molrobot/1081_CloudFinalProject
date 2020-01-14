@@ -25,7 +25,7 @@ class Visitor(db.Model):
         self.name = k
         self.password = v
     def __repr__(self):
-        return '<Visitor %r>' % self.id
+        return '<Visitor %r>' % self.name
 
 @app.route('/show')
 def show():
@@ -60,10 +60,12 @@ def login():
             if v.name == name and v.password == pw:
                 print(name)
                 session['username'] = name
+            print(session.get('username'), "XXX")
             return redirect('/dashboard')
         db.session.add(Visitor(name, pw))
         db.session.commit()
         session['username'] = name
+    print(session.get('username'))
         return redirect('/dashboard')
     return render_template('login.html', pagetitle='Login page')
 
