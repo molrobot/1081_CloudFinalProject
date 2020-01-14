@@ -71,7 +71,8 @@ def dashboard_ec2():
         for instance in reservation['Instances']:
             # if instance['Tags']['Name'] == session.get('username'):
                 print(instance['Tags'])
-                print(instance['Tags']['Name'])
+                print(instance['Tags'][0]['Key'])
+                print(instance['Tags'][0]['Value'])
                 instances.append("Instance: " + instance['InstanceId'])
                 for securityGroup in instance['SecurityGroups']:
                     instances.append("SecurityGroup ID: {}, Name: {}".format(securityGroup['GroupId'], securityGroup['GroupName']))
