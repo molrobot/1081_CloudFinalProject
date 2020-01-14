@@ -41,7 +41,7 @@ def renew():
         os.environ['AWS_ACCESS_KEY_ID'] = keyid
         os.environ['AWS_SECRET_ACCESS_KEY'] = key
         os.environ['AWS_SESSION_TOKEN'] = stoken
-    return redirect(url_for('login'))
+        return redirect(url_for('login'))
 
     return render_template('renew.html', pagetitle='Renew')
 @app.route('/', methods=['GET', 'POST'])
