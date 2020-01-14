@@ -32,7 +32,7 @@ def show():
         out += str(v.id) + ' ' + v.name + ' ' + v.password + '<br>'
     return out
 
-@app.route('/renew', methods=['POST'])
+@app.route('/renew', methods=['GET', 'POST'])
 def renew():
     if request.method == 'POST':
         keyid = request.form['id']
@@ -68,7 +68,7 @@ def dashboard():
     
     return render_template('dashboard.html', pagetitle='Login page' + session.get('username'))
 
-@app.route('/ec2', methods=['POST'])
+@app.route('/ec2', methods=['GET', 'POST'])
 def ec2_dashboard():
     if session.get('username') == None:
         return redirect(url_for('login'))
@@ -109,7 +109,7 @@ def ec2_dashboard():
     return render_template('ec2_dashboard.html', pagetitle='EC2 | Dashboard' +
         ' ' + session.get('username'), instance=instances)
 
-@app.route('/ec2/launch', methods=['POST'])
+@app.route('/ec2/launch', methods=['GET', 'POST'])
 def ec2_launch():
     if session.get('username') == None:
         return redirect(url_for('login'))
@@ -190,7 +190,7 @@ def ec2_launch():
     return render_template('ec2_launch.html', pagetitle='Launch Instance | EC2' +
         ' ' + session.get('username'), image=images, securitygroup=securitygroups, key=keys)
 
-@app.route('/s3', methods=['POST'])
+@app.route('/s3')
 def s3_dashboard():
     if session.get('username') == None:
         return redirect(url_for('login'))
@@ -203,19 +203,17 @@ def s3_dashboard():
 
 # Function to list files in a given S3 bucket
 def list_files(bucket):
-    global s3
-    if s3 == None:
-        s3 = boto3.client('s3')
+    client = boto3.client('s3')
     contents = []
     try:
-        for item in s3.list_objects(Bucket=bucket)['Contents']:
+        for item in client.list_objects(Bucket=bucket)['Contents']:
             print(item)
             contents.append(item)
     except Exception as e:
         pass
     return contents
 
-@app.route('/s3/create', methods=['POST'])
+@app.route('/s3/create', methods=['GET', 'POST'])
 def s3_create():
     if session.get('username') == None:
         return redirect(url_for('login'))
