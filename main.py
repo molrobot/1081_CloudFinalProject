@@ -68,11 +68,14 @@ def dashboard_ec2():
                     if instance['Tags'][0]['Value'] == session.get('username'):
                         if request.form['action'] == 'terminate':
                             instance.terminate()
+                            client.terminate_instances(
+                                InstanceIds=[instance['InstanceId']]
+                            )
                         elif request.form['action'] == 'start':
-                            instance.start()
+                            client.start_instances(
+                                InstanceIds=[instance['InstanceId']]
+                            )
     
-    # 等兩秒後再重新抓資料
-    time.sleep(2)
     instances = []
     response = client.describe_instances()
     for reservation in response['Reservations']:
