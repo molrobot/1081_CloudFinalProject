@@ -65,15 +65,16 @@ def dashboard_ec2():
 
     client = boto3.client('ec2')
 
+    instances = ""
     response = client.describe_instances()
     for reservation in response['Reservations']:
         for instance in reservation['Instances']:
-            print("Instance: " + instance['InstanceId'])
+            instances += "Instance: " + instance['InstanceId'] + '<br>'
             for securityGroup in instance['SecurityGroups']:
-                print("SG ID: {}, Name: {}".format(securityGroup['GroupId'], securityGroup['GroupName']))
+                instances += "SG ID: {}, Name: {}".format(securityGroup['GroupId'], securityGroup['GroupName']) + '<br>'
 
     return render_template('ec2_dashboard.html',
-        pagetitle='EC2 | Dashboard' + session.get('username'), response=ec2)
+        pagetitle='EC2 | Dashboard' + session.get('username'), instance=instances)
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])
 def ec2_launch():
