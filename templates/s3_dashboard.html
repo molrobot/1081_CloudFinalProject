@@ -22,26 +22,17 @@
 				</div>
 
 				<div>
-					<h3>Upload your file here:</h3>
-					<form method="POST" action="/s3/upload" enctype=multipart/form-data>
-						<input type="file" name="file">
-						<input type="submit" value="Upload">
-					</form>
-				</div>
-
-				<div>
-					<h3>These are your uploaded files:</h3>
-					<p>Click on the filename to download it.</p>
 					{% for bucket, item in buckets.items() %}
 					<div>
-						<h3>Upload your file here:</h3>
+						<h3>Upload your file to {{ bucket }}:</h3>
 						<form method="POST" action="/s3/upload" enctype=multipart/form-data>
 							<input type="file" name="file">
 							<input type="hidden" name="bucket" value="{{ bucket }}">
 							<input type="submit" value="Upload">
 						</form>
 					</div>
-					<p>current_bucket : {{ bucket }}</p>
+					<h4>These are your uploaded files:</h4>
+					<p>Click on the filename to download it.</p>
 					<ul>
 						{% for o in item %}
 							<li>

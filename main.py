@@ -306,6 +306,7 @@ def upload():
     if request.method == "POST":
         try:
             f = request.files['file']
+            bucket = request.form['bucket']
             # Upload the file
             response = s3.upload_fileobj(f, f.filename, f.filename)
         except ClientError as e:
