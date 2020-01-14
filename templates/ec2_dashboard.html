@@ -5,20 +5,20 @@
     <table>
         <tr>
             <td>
-                <button onclick="window.location.href='{{ url_for('ec2_launch') }}';">Launch Instance</button>
+                <button onclick="window.location.href='/ec2/launch';">Launch Instance</button>
             </td>
             <td>
-                <button onclick="window.location.href='{{ url_for('ec2_dashboard') }}';">Reflash Instance</button>
+                <button onclick="window.location.href='/ec2';">Reflash Instance</button>
             </td>
             <td>
-                <button onclick="window.location.href='{{ url_for('login') }}';">Logout</button>
+                <button onclick="window.location.href='/';">Logout</button>
             </td>
         </tr>
     </table>
 </div>
 <div>
     <table>
-        <form method="POST" name="post_form" action="{{ url_for('ec2_dashboard') }}">
+        <form method="POST" name="post_form" action="/ec2">
             <tr>
                 <td>
                     <button name='action' value='start'>Start All</button>

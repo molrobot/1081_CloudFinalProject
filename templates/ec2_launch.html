@@ -1,7 +1,7 @@
 {% extends "frame.html" %}
 {% block content %}
 <h1>Launch EC2 Instance</h1>
-<form method="POST" name="post_form" action="{{url_for('ec2_launch')}}">
+<form method="POST" name="post_form" action="/ec2/launch">
     <table>
         <tr>
             <td>Number:</td>
@@ -23,7 +23,7 @@
             <td>
                 <button type="submit">Submit</button>
                 <button type="reset">Clear</button>
-                <button type="button" onclick="window.location.href='{{ url_for('ec2_dashboard') }}';">Cancel</button>
+                <button type="button" onclick="window.location.href='/ec2';">Cancel</button>
             </td>
         </tr>
     </table>

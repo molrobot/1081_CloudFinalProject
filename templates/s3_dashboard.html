@@ -10,7 +10,7 @@
     
         <div>
           <h3>Create Bucket here:</h3>
-          <form method="POST" action='/create' enctype=multipart/form-data>  
+          <form method="POST" action='/s3/create' enctype=multipart/form-data>  
             <input name = "name" type = "text" size = "25">
             <input type=submit value=Create>
           </form>
@@ -18,7 +18,7 @@
 
         <div>
           <h3>Delete Bucket here:</h3>
-          <form method="POST" action='/delete' enctype=multipart/form-data>  
+          <form method="POST" action='/s3/delete' enctype=multipart/form-data>  
             <input name = "delname" type = "text" size = "25">
             <input type=submit value=Delete>
           </form>
@@ -26,7 +26,7 @@
 
         <div>
           <h3>Upload your file here:</h3>
-          <form method="POST" action="/upload" enctype=multipart/form-data>
+          <form method="POST" action="/s3/upload" enctype=multipart/form-data>
             <input type=file name=file>
             <input type=submit value=Upload>
           </form>

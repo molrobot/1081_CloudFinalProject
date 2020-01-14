@@ -202,7 +202,7 @@ def s3_dashboard():
         print(bucket["Name"])
         
     contents=[]
-    return render_template('storage.html', contents=contents)
+    return render_template('s3_dashboard.html', contents=contents)
 
 # Function to list files in a given S3 bucket
 def list_files(bucket):
@@ -228,13 +228,13 @@ def s3_create():
         new_bucket_name = str(request.form['name'])
         client = boto3.client('s3')
         response = client.create_bucket(
-        ACL='public-read-write',
-        Bucket=new_bucket_name
+            ACL='public-read-write',
+            Bucket=new_bucket_name
         )
         global BUCKET
         BUCKET=new_bucket_name
         # print(BUCKET)
-        return redirect("/storage")
+        return redirect(url_for('s3_dashboard'))
 
 def createSecurityGroup(gname, ports):
     global ec2
