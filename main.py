@@ -5,6 +5,7 @@ import boto3
 import time
 import random
 import string
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
@@ -54,7 +55,7 @@ def login():
         for v in visitors:
             if v.name == name and v.password == pw:
                 session['username'] = name
-                return render_template('dashboard.html', pagetitle='Dashboard')
+            return redirect(url_for('dashboard'))
         db.session.add(Visitor(name, pw))
         db.session.commit()
         session['username'] = name
@@ -196,7 +197,7 @@ def s3_dashboard():
         return redirect(url_for('login'))
 
     client = boto3.client('s3')
-    response = s3.list_buckets()
+    response = client.list_buckets()
     for bucket in response['Buckets']:
         print(bucket["Name"])
         
