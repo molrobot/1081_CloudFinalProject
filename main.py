@@ -67,7 +67,6 @@ def dashboard_ec2():
                 for instance in reservation['Instances']:
                     if instance['Tags'][0]['Value'] == session.get('username'):
                         if request.form['action'] == 'terminate':
-                            instance.terminate()
                             client.terminate_instances(
                                 InstanceIds=[instance['InstanceId']]
                             )
