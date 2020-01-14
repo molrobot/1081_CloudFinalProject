@@ -94,7 +94,7 @@ def ec2_launch():
 
         # find the key
         flag = True
-        key = request.form['keyid']
+        key = session.get('username')
         for k in list(ec2.key_pairs.all()):
             if k.name == key:
                 flag = False
@@ -140,7 +140,7 @@ def ec2_launch():
             UserData=userdata,
             TagSpecifications=tags,
         )
-        inst_ids = [ inst.instance_id for inst in instances]
+        # inst_ids = [ inst.instance_id for inst in instances]
         print("Launch complete.")
         return render_template('ec2_launch_complete.html', pagetitle='Launch Complete | EC2' + \
             session.get('username'), instance=instances, material=material)
