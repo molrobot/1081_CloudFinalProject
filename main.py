@@ -2,6 +2,7 @@ from flask import Flask, session, abort, flash, request, redirect, url_for, rend
 from flask_sqlalchemy import SQLAlchemy
 import os
 import boto3
+import time
 import random
 import string
 app = Flask(__name__)
@@ -71,7 +72,7 @@ def dashboard_ec2():
                             instance.start()
     
     # 等兩秒後再重新抓資料
-    sleep(2)
+    time.sleep(2)
     instances = []
     response = client.describe_instances()
     for reservation in response['Reservations']:
