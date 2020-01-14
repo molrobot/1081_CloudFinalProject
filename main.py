@@ -54,22 +54,29 @@ def dashboard():
     
     return render_template('dashboard.html', pagetitle='Login page' + session.get('username'))
 
-@app.route('/ec2')
+@app.route('/ec2', methods=['GET', 'POST'])
 def dashboard_ec2():
     if session.get('username') == None:
         return redirect(url_for('login'))
 
-    global ec2
-    if ec2 == None:
-        ec2 = boto3.resource('ec2')
-
     client = boto3.client('ec2')
-
+    if request.method == 'POST':
+            response = client.describe_instances()
+            for reservation in response['Reservations']:
+                for instance in reservation['Instances']:
+                    if instance['Tags'][0]['Value'] == session.get('username'):
+                        if request.form['action'] == 'terminate':
+                            instance.terminate()
+                        elif request.form['action'] == 'start':
+                            instance.start()
+    
+    # 等兩秒後再重新抓資料
+    sleep(2)
     instances = []
     response = client.describe_instances()
     for reservation in response['Reservations']:
         for instance in reservation['Instances']:
-            if instance['Tags'][0]['Key'] == 'Name' and instance['Tags'][0]['Value'] == session.get('username'):
+            if instance['Tags'][0]['Value'] == session.get('username'):
                 instances.append(instance)
 
             # if instance['Tags'][0]['Key'] == 'Name' and instance['Tags'][0]['Value'] == session.get('username'):

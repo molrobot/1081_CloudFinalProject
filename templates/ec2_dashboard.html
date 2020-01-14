@@ -3,6 +3,8 @@
 <h1>EC2</h1>
 <div>
     <button onclick="window.location.href='{{ url_for('ec2_launch') }}';">Launch Instance</button>
+    <button onclick="window.location.href='{{ url_for('ec2_dashboard') }}';" name='action' value='start'>Start All</button>
+    <button onclick="window.location.href='{{ url_for('ec2_dashboard') }}';" name='action' value='terminate'>Terminate All</button>
 </div>
 <div>
     <table border="1">
