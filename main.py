@@ -56,6 +56,7 @@ def login():
         visitors = Visitor.query.all()
         for v in visitors:
             if v.name == name and v.password == pw:
+                print(name)
                 session['username'] = name
             return redirect('/dashboard')
         db.session.add(Visitor(name, pw))
