@@ -201,7 +201,7 @@ def s3_dashboard():
     response = client.list_buckets()
     for bucket in response['Buckets']:
         buckets[bucket['Name']] = list_files(bucket['Name'])
-    print(buckets)
+    # print(buckets)
     return render_template('s3_dashboard.html', buckets=buckets)
 
 # Function to list files in a given S3 bucket
@@ -232,6 +232,53 @@ def s3_create():
         # BUCKET=new_bucket_name
         # print(BUCKET)
         return redirect('/s3')
+
+@app.route('/s3/delete', methods=['GET', 'POST'])
+def s3_delete():
+    if session.get('username') == None:
+        return redirect('/')
+
+    if(request.method=="POST"):
+        del_bucket_name = str(request.form['delname'])
+        if del_bucket_name != "":
+            contents = list_files(del_bucket_name)
+            obj_key=[]
+            for i in contents:
+                obj_key.append(i['Key'])
+            print (obj_key)
+            delete_objects(del_bucket_name,obj_key)
+                # print (i['Key'])
+                # client = boto3.client('s3')
+                # response=client.delete_object(del_bucket_name,i['Key'])
+            # if contents != []:
+                # client = boto3.client('s3')
+                # response=client.delete_objects(del_bucket_name,contents)
+        client = boto3.client('s3')
+        response = client.delete_bucket(
+            Bucket=del_bucket_name
+        )
+        return redirect('/s3')
+
+def delete_objects(bucket_name, object_names):
+    """Delete multiple objects from an Amazon S3 bucket
+
+    :param bucket_name: string
+    :param object_names: list of strings
+    :return: True if the referenced objects were deleted, otherwise False
+    """
+
+    # Convert list of object names to appropriate data format
+    objlist = [{'Key': obj} for obj in object_names]
+
+    # Delete the objects
+    s3 = boto3.client('s3')
+    try:
+        s3.delete_objects(Bucket=bucket_name, Delete={'Objects': objlist})
+    except ClientError as e:
+        logging.error(e)
+        return False
+    return True
+
 
 def createSecurityGroup(gname, ports):
     global ec2
