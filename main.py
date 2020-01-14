@@ -44,7 +44,7 @@ def renew():
         return redirect(url_for('login'))
     return render_template('renew.html', pagetitle='Renew')
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET', 'POST'])
 def login():
     session.clear()
     if request.method == 'POST':
@@ -190,13 +190,30 @@ def ec2_launch():
     return render_template('ec2_launch.html', pagetitle='Launch Instance | EC2' +
         ' ' + session.get('username'), image=images, securitygroup=securitygroups, key=keys)
 
-@app.route('/s3')
+@app.route('/s3', methods=['POST'])
 def s3_dashboard():
     if session.get('username') == None:
         return redirect(url_for('login'))
+
+    if BUCKET != "":
+        contents = list_files(BUCKET)
+    else :
+        contents=[]
+    return render_template('storage.html', contents=contents)
+
+# Function to list files in a given S3 bucket
+def list_files(bucket):
     global s3
-    s3 = boto3.client('s3')
-    return render_template('s3_dashboard.html', pagetitle='S3 | Dashboard')
+    if s3 == None:
+        s3 = boto3.client('s3')
+    contents = []
+    try:
+        for item in s3.list_objects(Bucket=bucket)['Contents']:
+            print(item)
+            contents.append(item)
+    except Exception as e:
+        pass
+    return contents
 
 @app.route('/s3/create', methods=['POST'])
 def s3_create():
@@ -214,17 +231,6 @@ def s3_create():
         BUCKET=new_bucket_name
         # print(BUCKET)
         return redirect("/storage")
-
-@app.route('/s3/storage')
-def s3_storage():
-    if session.get('username') == None:
-        return redirect(url_for('login'))
-
-    if BUCKET != "":
-        contents = list_files(BUCKET)
-    else :
-        contents=[]
-    return render_template('s3_dashboard.html', contents=contents)
 
 def createSecurityGroup(gname, ports):
     global ec2
