@@ -1,5 +1,6 @@
 from flask import Flask, session, abort, flash, request, redirect, url_for, render_template
 from flask_sqlalchemy import SQLAlchemy
+from botocore.exceptions import ClientError
 import os
 import boto3
 import time
@@ -11,7 +12,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 ec2 = None
 s3 = None
-
+ec2_client = None
+s3_client = None
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 class Visitor(db.Model):
@@ -74,32 +76,34 @@ def ec2_dashboard():
     if session.get('username') == None:
         return redirect('/')
 
-    client = boto3.client('ec2')
+    global ec2_client
+    if ec2_client == None
+        ec2_client = boto3.client('ec2')
     if request.method == 'POST':
-            response = client.describe_instances()
+            response = ec2_client.describe_instances()
             for reservation in response['Reservations']:
                 for instance in reservation['Instances']:
                     if instance['Tags'][0]['Value'] == session.get('username'):
                         if request.form['action'] == 'terminate':
-                            client.terminate_instances(
+                            ec2_client.terminate_instances(
                                 InstanceIds=[instance['InstanceId']]
                             )
                         elif request.form['action'] == 'start':
-                            client.start_instances(
+                            ec2_client.start_instances(
                                 InstanceIds=[instance['InstanceId']]
                             )
                         elif request.form['action'] == 'stop':
-                            client.stop_instances(
+                            ec2_client.stop_instances(
                                 InstanceIds=[instance['InstanceId']]
                             )
                         elif request.form['action'] == 'reboot':
-                            client.reboot_instances(
+                            ec2_client.reboot_instances(
                                 InstanceIds=[instance['InstanceId']]
                             )
     
     time.sleep(3)
     instances = []
-    response = client.describe_instances()
+    response = ec2_client.describe_instances()
     for reservation in response['Reservations']:
         # print(reservation['Instances'])
         for instance in reservation['Instances']:
@@ -196,9 +200,12 @@ def s3_dashboard():
     if session.get('username') == None:
         return redirect('/')
 
+    global s3_client
+    if s3_client == None
+        s3_client = boto3.client('s3')
+
     buckets = dict()
-    client = boto3.client('s3')
-    response = client.list_buckets()
+    response = s3_client.list_buckets()
     for bucket in response['Buckets']:
         buckets[bucket['Name']] = list_files(bucket['Name'])
     # print(buckets)
@@ -208,8 +215,10 @@ def s3_dashboard():
 def list_files(bucket):
     contents = []
     try:
-        client = boto3.client('s3')
-        for item in client.list_objects(Bucket=bucket)['Contents']:
+        global s3_client
+        if s3_client == None
+            s3_client = boto3.client('s3')
+        for item in s3_client.list_objects(Bucket=bucket)['Contents']:
             print(item)
             contents.append(item)
     except Exception as e:
@@ -221,10 +230,13 @@ def s3_create():
     if session.get('username') == None:
         return redirect('/')
 
+    global s3_client
+    if s3_client == None
+        s3_client = boto3.client('s3')
+
     if request.method == "POST":
         new_bucket_name = str(request.form['name'])
-        client = boto3.client('s3')
-        response = client.create_bucket(
+        response = s3_client.create_bucket(
             ACL='public-read-write',
             Bucket=new_bucket_name
         )
@@ -237,6 +249,10 @@ def s3_create():
 def s3_delete():
     if session.get('username') == None:
         return redirect('/')
+
+    global s3_client
+    if s3_client == None
+        s3_client = boto3.client('s3')
 
     if(request.method=="POST"):
         del_bucket_name = str(request.form['delname'])
@@ -253,8 +269,7 @@ def s3_delete():
             # if contents != []:
                 # client = boto3.client('s3')
                 # response=client.delete_objects(del_bucket_name,contents)
-        client = boto3.client('s3')
-        response = client.delete_bucket(
+        response = s3_client.delete_bucket(
             Bucket=del_bucket_name
         )
         return redirect('/s3')
@@ -270,14 +285,41 @@ def delete_objects(bucket_name, object_names):
     # Convert list of object names to appropriate data format
     objlist = [{'Key': obj} for obj in object_names]
 
+    global s3_client
+    if s3_client == None
+        s3_client = boto3.client('s3')
     # Delete the objects
-    s3 = boto3.client('s3')
     try:
-        s3.delete_objects(Bucket=bucket_name, Delete={'Objects': objlist})
+        s3_client.delete_objects(Bucket=bucket_name, Delete={'Objects': objlist})
     except ClientError as e:
         logging.error(e)
-        return False
-    return True
+        return redirect('/s3')
+    
+    return redirect('/s3')
+
+@app.route("/s3/upload", methods=['GET', 'POST'])
+def upload():
+    # If S3 object_name was not specified, use file_name
+    if object_name is None:
+        object_name = file_name
+
+    global s3_client
+    if s3_client == None
+        s3_client = boto3.client('s3')
+    # Upload the file
+    try:
+        response = s3_client.upload_file(file_name, bucket, object_name)
+    except ClientError as e:
+        logging.error(e)
+        return redirect('/s3')
+    return redirect('/s3')
+    # if request.method == "POST":
+    #     f = request.files['file']
+    #     f.save(f.filename)
+    #     upload_file(f"{f.filename}", BUCKET)
+
+    #     return redirect("/storage")
+
 
 
 def createSecurityGroup(gname, ports):
