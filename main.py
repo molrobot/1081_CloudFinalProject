@@ -64,7 +64,7 @@ def dashboard_ec2():
     if request.method == 'POST':
             response = client.describe_instances()
             for reservation in response['Reservations']:
-                print(reservation['Instances'])
+                # print(reservation['Instances'])
                 for instance in reservation['Instances']:
                     if instance['Tags'][0]['Value'] == session.get('username'):
                         if request.form['action'] == 'terminate':
@@ -80,12 +80,13 @@ def dashboard_ec2():
     instances = []
     response = client.describe_instances()
     for reservation in response['Reservations']:
-        print(reservation['Instances'])
+        # print(reservation['Instances'])
         for instance in reservation['Instances']:
             if instance['Tags'][0]['Value'] == session.get('username'):
                 instances.append(instance)
-                
-    return render_template('ec2_dashboard.html', \
+
+    print(instances)      
+    return render_template('ec2_dashboard.html',
         pagetitle='EC2 | Dashboard' + ' ' + session.get('username'), instance=instances)
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])

@@ -3,9 +3,9 @@
 <h1>EC2</h1>
 <div>
     <button onclick="window.location.href='{{ url_for('ec2_launch') }}';">Launch Instance</button>       
-    <form method="POST" name="post_form" action="{{url_for('dashboard_ec2')}}">
-            <button name='action' value='start'>Start All</button>
-            <button name='action' value='terminate'>Terminate All</button>
+    <form method="POST" name="post_form" action="{{ url_for('dashboard_ec2') }}">
+        <button name='action' value='start'>Start All</button>
+        <button name='action' value='terminate'>Terminate All</button>
     </form>
 </div>
 <div>
@@ -29,6 +29,5 @@
         </tr>
         {% endfor %}
     </table>
-
 </div>
 {% endblock %}
