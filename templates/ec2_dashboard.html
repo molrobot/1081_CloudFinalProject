@@ -6,11 +6,22 @@
 </div>
 <div>
     <table>
+        <thead>
+            <th>Number</th>
+            <th>Name</th>
+            <th>State</th>
+            <th>Public DNS</th>
+            <th>SecurityGroup</th>
+            <th>KeyName</th>
+        </thead>
         {% for s in instance %}
         <tr>
-            <td>
-                {{ s }}
-            </td>
+            <td> {{ loop.index }} </td>
+            <td> {{ s['Tags'][0]['Value']  }} </td>
+            <td> {{ s['State']['Name'] }} </td>
+            <td> {{ s['PublicDnsName'] }} </td>
+            <td> {{ s['SecurityGroups'][0]['GroupName'] }} </td>
+            <td> {{ s['KeyName'] }} </td>
         </tr>
         {% endfor %}
     </table>
