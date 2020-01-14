@@ -32,7 +32,7 @@
 				<div>
 					<h3>These are your uploaded files:</h3>
 					<p>Click on the filename to download it.</p>
-					{% for bucket, item in buckets.iteritems() %}
+					{% for bucket, item in buckets.items() %}
 					<p>current_bucket : {{ bucket }}</p>
 					<ul>
 						{% for o in item %}
