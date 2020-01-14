@@ -16,16 +16,16 @@
 				<div>
 					<h3>Delete Bucket here:</h3>
 					<form method="POST" action='/s3/delete' enctype=multipart/form-data>
-						<input name = "delname" type = "text" size = "25">
-						<input type=submit value=Delete>
+						<input name="delname" type="text" size="25">
+						<input type="submit" value="Delete">
 					</form>
 				</div>
 
 				<div>
 					<h3>Upload your file here:</h3>
 					<form method="POST" action="/s3/upload" enctype=multipart/form-data>
-						<input type=file name=file>
-						<input type=submit value=Upload>
+						<input type="file" name="file">
+						<input type="submit" value="Upload">
 					</form>
 				</div>
 
@@ -33,6 +33,14 @@
 					<h3>These are your uploaded files:</h3>
 					<p>Click on the filename to download it.</p>
 					{% for bucket, item in buckets.items() %}
+					<div>
+						<h3>Upload your file here:</h3>
+						<form method="POST" action="/s3/upload" enctype=multipart/form-data>
+							<input type="file" name="file">
+							<input type="hidden" name="bucket" value="{{ bucket }}">
+							<input type="submit" value="Upload">
+						</form>
+					</div>
 					<p>current_bucket : {{ bucket }}</p>
 					<ul>
 						{% for o in item %}

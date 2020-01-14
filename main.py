@@ -299,20 +299,20 @@ def delete_objects(bucket_name, object_names):
 
 @app.route("/s3/upload", methods=['GET', 'POST'])
 def upload():
-    # If S3 object_name was not specified, use file_name
-    if object_name is None:
-        object_name = file_name
-
     global s3_client
     if s3_client == None:
         s3_client = boto3.client('s3')
-    # Upload the file
-    try:
-        response = s3_client.upload_file(file_name, bucket, object_name)
-    except ClientError as e:
-        logging.error(e)
-        return redirect('/s3')
+
+    if request.method == "POST":
+        try:
+            f = request.files['file']
+            # Upload the file
+            response = s3.upload_fileobj(f, f.filename, f.filename)
+        except ClientError as e:
+            logging.error(e)
+            return redirect('/s3')
     return redirect('/s3')
+
     # if request.method == "POST":
     #     f = request.files['file']
     #     f.save(f.filename)
