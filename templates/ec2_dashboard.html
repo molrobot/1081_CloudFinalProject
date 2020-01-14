@@ -10,15 +10,26 @@
             <td>
                 <button onclick="window.location.href='{{ url_for('dashboard_ec2') }}';">Reflash Instance</button>
             </td>
+            <td>
+                <button onclick="window.location.href='{{ url_for('login') }}';">Logout</button>
+            </td>
         </tr>
-        <tr>
-            <form method="POST" name="post_form" action="{{ url_for('dashboard_ec2') }}">
-                <button name='action' value='start'>Start All</button>
-                <button name='action' value='stop'>Stop All</button>
-                <button name='action' value='reboot'>Reboot All</button>
-                <button name='action' value='terminate'>Terminate All</button>
-            </form>
-        </tr>
+        <form method="POST" name="post_form" action="{{ url_for('dashboard_ec2') }}">
+            <tr>
+                <td>
+                    <button name='action' value='start'>Start All</button>
+                </td>
+                <td>
+                    <button name='action' value='stop'>Stop All</button>
+                </td>
+                <td>
+                    <button name='action' value='reboot'>Reboot All</button>
+                </td>
+                <td>
+                    <button name='action' value='terminate'>Terminate All</button>
+                </td>
+            </tr>
+        </form>
     </table>
 </div>
 <div>
