@@ -275,13 +275,6 @@ def s3_delete():
         return redirect('/s3')
 
 def delete_objects(bucket_name, object_names):
-    """Delete multiple objects from an Amazon S3 bucket
-
-    :param bucket_name: string
-    :param object_names: list of strings
-    :return: True if the referenced objects were deleted, otherwise False
-    """
-
     # Convert list of object names to appropriate data format
     objlist = [{'Key': obj} for obj in object_names]
 
@@ -308,7 +301,7 @@ def upload():
             f = request.files['file']
             bucket = request.form['bucket']
             # Upload the file
-            response = s3.upload_fileobj(f, f.filename, f.filename)
+            response = s3_client.upload_fileobj(f, f.filename, f.filename)
         except ClientError as e:
             logging.error(e)
             return redirect('/s3')
