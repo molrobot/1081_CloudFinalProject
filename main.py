@@ -69,9 +69,9 @@ def dashboard_ec2():
     response = client.describe_instances()
     for reservation in response['Reservations']:
         for instance in reservation['Instances']:
-            instances.push("Instance: " + instance['InstanceId'])
+            instances.append("Instance: " + instance['InstanceId'])
             for securityGroup in instance['SecurityGroups']:
-                instances.push("SecurityGroup ID: {}, Name: {}".format(securityGroup['GroupId'], securityGroup['GroupName']))
+                instances.append("SecurityGroup ID: {}, Name: {}".format(securityGroup['GroupId'], securityGroup['GroupName']))
 
     return render_template('ec2_dashboard.html',
         pagetitle='EC2 | Dashboard' + session.get('username'), instance=instances)
