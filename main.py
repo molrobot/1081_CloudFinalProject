@@ -60,7 +60,16 @@ def dashboard_ec2():
     global ec2
     if ec2 == None:
         ec2 = boto3.resource('ec2')
-    
+
+    client = boto3.client('ec2')
+
+    response = client.describe_instances()
+    for reservation in response['Reservations']:
+        for instance in reservation['Instances']:
+            print("Instance: " + instance['InstanceId'])
+            for securityGroup in instance['SecurityGroups']:
+                print("SG ID: {}, Name: {}".format(securityGroup['GroupId'], securityGroup['GroupName']))
+
     return render_template('ec2_dashboard.html', pagetitle='EC2 | Dashboard', response=ec2)
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])
@@ -103,17 +112,17 @@ def ec2_launch():
                 'ResourceType': 'instance',
                 'Tags': [
                     {
-                        'Key': 'name',
+                        'Key': 'Name',
                         'Value': tag
                     },
                 ]
             }
         ]
-        
+
         image = str(request.form['image'])
         instance = 't2.micro'
         inst_num = int(request.form['number'])
-        sg_id = createSecurityGroup(request.form['securitygroup'], [22,8080])
+        sg_id = createSecurityGroup(session.get('username'), [22,8080])
         userdata = str(request.form['userdata'])
 
         # create VMs with userdata
