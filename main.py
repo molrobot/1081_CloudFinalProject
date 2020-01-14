@@ -303,7 +303,7 @@ def upload():
     return redirect('/s3')
 
 @app.route("/s3/download", methods=['GET', 'POST'])
-def download(filename):
+def download():
     global s3_client
     if s3_client == None:
         s3_client = boto3.client('s3')
