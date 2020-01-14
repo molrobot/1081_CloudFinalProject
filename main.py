@@ -42,7 +42,7 @@ def renew():
         os.environ['AWS_ACCESS_KEY_ID'] = keyid
         os.environ['AWS_SECRET_ACCESS_KEY'] = key
         os.environ['AWS_SESSION_TOKEN'] = stoken
-        return redirect(url_for('login'))
+        return redirect('/')
     return render_template('renew.html', pagetitle='Renew')
 
 @app.route('/', methods=['GET', 'POST'])
@@ -55,24 +55,24 @@ def login():
         for v in visitors:
             if v.name == name and v.password == pw:
                 session['username'] = name
-            return redirect(url_for('dashboard'))
+            return redirect('/dashboard')
         db.session.add(Visitor(name, pw))
         db.session.commit()
         session['username'] = name
-        return redirect(url_for('dashboard'))
+        return redirect('/dashboard')
     return render_template('login.html', pagetitle='Login page')
 
 @app.route('/dashboard')
 def dashboard():
     if session.get('username') == None:
-        return redirect(url_for('login'))
+        return redirect('/')
     
     return render_template('dashboard.html', pagetitle='Login page' + session.get('username'))
 
 @app.route('/ec2', methods=['GET', 'POST'])
 def ec2_dashboard():
     if session.get('username') == None:
-        return redirect(url_for('login'))
+        return redirect('/')
 
     client = boto3.client('ec2')
     if request.method == 'POST':
@@ -113,7 +113,7 @@ def ec2_dashboard():
 @app.route('/ec2/launch', methods=['GET', 'POST'])
 def ec2_launch():
     if session.get('username') == None:
-        return redirect(url_for('login'))
+        return redirect('/')
 
     global ec2
     if ec2 == None:
@@ -194,7 +194,7 @@ def ec2_launch():
 @app.route('/s3')
 def s3_dashboard():
     if session.get('username') == None:
-        return redirect(url_for('login'))
+        return redirect('/')
 
     client = boto3.client('s3')
     response = client.list_buckets()
@@ -222,7 +222,7 @@ def list_files(bucket):
 @app.route('/s3/create', methods=['GET', 'POST'])
 def s3_create():
     if session.get('username') == None:
-        return redirect(url_for('login'))
+        return redirect('/')
 
     if request.method == "POST":
         new_bucket_name = str(request.form['name'])
@@ -231,10 +231,10 @@ def s3_create():
             ACL='public-read-write',
             Bucket=new_bucket_name
         )
-        global BUCKET
-        BUCKET=new_bucket_name
+        # global BUCKET
+        # BUCKET=new_bucket_name
         # print(BUCKET)
-        return redirect(url_for('s3_dashboard'))
+        return redirect('/s3')
 
 def createSecurityGroup(gname, ports):
     global ec2
