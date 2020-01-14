@@ -32,7 +32,7 @@ def show():
         out += str(v.id) + ' ' + v.name + ' ' + v.password + '<br>'
     return out
 
-@app.route('/renew', methods=['GET', 'POST'])
+@app.route('/renew', methods=['POST'])
 def renew():
     if request.method == 'POST':
         keyid = request.form['id']
@@ -42,9 +42,9 @@ def renew():
         os.environ['AWS_SECRET_ACCESS_KEY'] = key
         os.environ['AWS_SESSION_TOKEN'] = stoken
         return redirect(url_for('login'))
-
     return render_template('renew.html', pagetitle='Renew')
-@app.route('/', methods=['GET', 'POST'])
+
+@app.route('/', methods=['POST'])
 def login():
     session.clear()
     if request.method == 'POST':
@@ -58,7 +58,7 @@ def login():
         db.session.add(Visitor(name, pw))
         db.session.commit()
         session['username'] = name
-        return render_template('dashboard.html', pagetitle='Dashboard')
+        return redirect(url_for('dashboard'))
     return render_template('login.html', pagetitle='Login page')
 
 @app.route('/dashboard')
@@ -68,8 +68,8 @@ def dashboard():
     
     return render_template('dashboard.html', pagetitle='Login page' + session.get('username'))
 
-@app.route('/ec2', methods=['GET', 'POST'])
-def dashboard_ec2():
+@app.route('/ec2', methods=['POST'])
+def ec2_dashboard():
     if session.get('username') == None:
         return redirect(url_for('login'))
 
@@ -109,7 +109,7 @@ def dashboard_ec2():
     return render_template('ec2_dashboard.html', pagetitle='EC2 | Dashboard' +
         ' ' + session.get('username'), instance=instances)
 
-@app.route('/ec2/launch', methods=['GET', 'POST'])
+@app.route('/ec2/launch', methods=['POST'])
 def ec2_launch():
     if session.get('username') == None:
         return redirect(url_for('login'))
@@ -191,17 +191,40 @@ def ec2_launch():
         ' ' + session.get('username'), image=images, securitygroup=securitygroups, key=keys)
 
 @app.route('/s3')
-def dashboard_s3():
+def s3_dashboard():
+    if session.get('username') == None:
+        return redirect(url_for('login'))
     global s3
     s3 = boto3.client('s3')
     return render_template('s3_dashboard.html', pagetitle='S3 | Dashboard')
 
-@app.route('/s3/launch')
-def service_s3(service):
-    global s3
-    if request.method == 'POST':
-        return render_template('')
-    return render_template('s3_launch.html', pagetitle=service+' | S3')
+@app.route('/s3/create', methods=['POST'])
+def s3_create():
+    if session.get('username') == None:
+        return redirect(url_for('login'))
+
+    if request.method == "POST":
+        new_bucket_name = str(request.form['name'])
+        client = boto3.client('s3')
+        response = client.create_bucket(
+        ACL='public-read-write',
+        Bucket=new_bucket_name
+        )
+        global BUCKET
+        BUCKET=new_bucket_name
+        # print(BUCKET)
+        return redirect("/storage")
+
+@app.route('/s3/storage')
+def s3_storage():
+    if session.get('username') == None:
+        return redirect(url_for('login'))
+
+    if BUCKET != "":
+        contents = list_files(BUCKET)
+    else :
+        contents=[]
+    return render_template('s3_dashboard.html', contents=contents)
 
 def createSecurityGroup(gname, ports):
     global ec2
