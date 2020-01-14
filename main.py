@@ -60,6 +60,7 @@ def dashboard_ec2():
     global ec2
     if ec2 == None:
         ec2 = boto3.resource('ec2')
+    
     return render_template('ec2_dashboard.html', pagetitle='EC2 | Dashboard', response=ec2)
 
 @app.route('/ec2/launch', methods=['GET', 'POST'])
@@ -96,7 +97,7 @@ def ec2_launch():
             material = key_pair.key_material
             print(material)
 
-        
+        tag = session.get('username')
         image = str(request.form['image'])
         instance = 't2.micro'
         inst_num = int(request.form['number'])
@@ -112,7 +113,15 @@ def ec2_launch():
             MinCount=inst_num,
             MaxCount=inst_num,
             SecurityGroupIds=[sg_id],
-            UserData=userdata
+            UserData=userdata,
+            TagSpecifications=[
+                'Tags':[
+                    {
+                        'Key': 'name',
+                        'Value': tag
+                    },
+                ],
+            ],
         )
         inst_ids = [ inst.instance_id for inst in instances]
         print("Launch complete.")
