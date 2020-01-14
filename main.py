@@ -65,7 +65,7 @@ def login():
         db.session.add(Visitor(name, pw))
         db.session.commit()
         session['username'] = name
-    print(session.get('username'))
+        print(session.get('username'))
         return redirect('/dashboard')
     return render_template('login.html', pagetitle='Login page')
 
