@@ -286,7 +286,7 @@ def delete_objects(bucket_name, object_names):
     objlist = [{'Key': obj} for obj in object_names]
 
     global s3_client
-    if s3_client == None::
+    if s3_client == None:
         s3_client = boto3.client('s3')
     # Delete the objects
     try:
@@ -304,7 +304,7 @@ def upload():
         object_name = file_name
 
     global s3_client
-    if s3_client == None::
+    if s3_client == None:
         s3_client = boto3.client('s3')
     # Upload the file
     try:
@@ -320,7 +320,24 @@ def upload():
 
     #     return redirect("/storage")
 
+def upload_file(file_name, bucket):
+    """
+    Function to upload a file to an S3 bucket
+    """
+    object_name = file_name
+    s3_client = boto3.client('s3')
+    response = s3_client.upload_file(file_name, bucket, object_name)
 
+    return response
+
+@app.route("/s3/download", methods=['GET', 'POST'])
+def download(filename):
+    if request.method == 'GET':
+        s3 = boto3.resource('s3')
+        output = f"downloads/{filename}"
+        s3.Bucket(bucket).download_file(file_name, output)
+
+        return send_file(output, as_attachment=True)
 
 def createSecurityGroup(gname, ports):
     global ec2
