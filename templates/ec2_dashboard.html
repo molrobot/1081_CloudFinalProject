@@ -5,6 +5,15 @@
     <button onclick="window.location.href='{{ url_for('ec2_launch') }}';">Launch Instance</button>
 </div>
 <div>
-    {{ instance }}
+    <table>
+        {% for s in instances %}
+        <tr>
+            <td>
+                {{ s }}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
 </div>
 {% endblock %}
