@@ -301,9 +301,9 @@ def upload():
             f = request.files['file']
             bucket = request.form['bucket']
             # Upload the file
-            response = s3_client.upload_fileobj(f, f.filename, f.filename)
+            response = s3_client.upload_fileobj(f, bucket, f.filename)
         except ClientError as e:
-            logging.error(e)
+            print(e)
             return redirect('/s3')
     return redirect('/s3')
 
