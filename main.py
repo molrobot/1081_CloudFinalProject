@@ -70,9 +70,12 @@ def dashboard_ec2():
     for reservation in response['Reservations']:
         for instance in reservation['Instances']:
             if instance['Tags'][0]['Key'] == 'Name' and instance['Tags'][0]['Value'] == session.get('username'):
-                instances.append("Instance: " + instance['InstanceId'] + "Public DNS: " + instance["PublicDnsName"])
-                for securityGroup in instance['SecurityGroups']:
-                    instances.append("SecurityGroup ID: {}, Name: {}".format(securityGroup['GroupId'], securityGroup['GroupName']))
+                instances.append(instance)
+
+            # if instance['Tags'][0]['Key'] == 'Name' and instance['Tags'][0]['Value'] == session.get('username'):
+            #     instances.append("Instance: " + instance['InstanceId'] + "Public DNS: " + instance["PublicDnsName"])
+            #     for securityGroup in instance['SecurityGroups']:
+            #         instances.append("SecurityGroup ID: {}, Name: {}".format(securityGroup['GroupId'], securityGroup['GroupName']))
 
     return render_template('ec2_dashboard.html',
         pagetitle='EC2 | Dashboard' + ' ' + session.get('username'), instance=instances)
