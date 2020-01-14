@@ -240,9 +240,6 @@ def s3_create():
             ACL='public-read-write',
             Bucket=new_bucket_name
         )
-        # global BUCKET
-        # BUCKET=new_bucket_name
-        # print(BUCKET)
         return redirect('/s3')
 
 @app.route('/s3/delete', methods=['GET', 'POST'])
@@ -314,17 +311,16 @@ def download(bucket, key):
     if s3_client == None:
         s3_client = boto3.client('s3')
 
-    if request.method == 'GET':
-        print(key, bucket)
-        try:
-            s3_client.download_file(bucket, key, key)
-        except ClientError as e:
-            print(e)
-    return redirect('/s3')
+    print(key, bucket)
+    try:
+        s3_client.download_fileobj(bucket, key, f)
+    except ClientError as e:
+        print(e)
+        return redirect('/s3')
         # s3 = boto3.resource('s3')
         # output = f"downloads/{filename}"
         # s3.Bucket(bucket).download_file(file_name, output)
-        # return send_file(output, as_attachment=True)
+    return send_file(f, as_attachment=True)
 
 def createSecurityGroup(gname, ports):
     global ec2
