@@ -98,6 +98,18 @@ def ec2_launch():
             print(material)
 
         tag = session.get('username')
+        tags = [
+            {
+                'ResourceType': 'instance',
+                'Tags': [
+                    {
+                        'Key': 'name',
+                        'Value': tag
+                    },
+                ]
+            }
+        ]
+        
         image = str(request.form['image'])
         instance = 't2.micro'
         inst_num = int(request.form['number'])
@@ -114,14 +126,7 @@ def ec2_launch():
             MaxCount=inst_num,
             SecurityGroupIds=[sg_id],
             UserData=userdata,
-            TagSpecifications=[
-                'Tags':[
-                    {
-                        'Key': 'name',
-                        'Value': tag
-                    },
-                ],
-            ],
+            TagSpecifications=tags
         )
         inst_ids = [ inst.instance_id for inst in instances]
         print("Launch complete.")
